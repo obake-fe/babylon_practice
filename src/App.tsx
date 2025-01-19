@@ -1,4 +1,9 @@
-import { FreeCamera, Vector3, HemisphericLight, MeshBuilder } from "@babylonjs/core";
+import {
+  FreeCamera,
+  Vector3,
+  HemisphericLight,
+  MeshBuilder,
+} from "@babylonjs/core";
 // import SceneComponent from 'babylonjs-hook'; // if you install 'babylonjs-hook' NPM.
 import "./App.css";
 import { SceneComponent } from "./SceneComponent";
@@ -47,6 +52,11 @@ const onRender = (scene) => {
 
 export default () => (
   <div>
-    <SceneComponent antialias onSceneReady={onSceneReady} onRender={onRender} id="my-canvas" />
+    <SceneComponent
+      antialias
+      onSceneReady={onSceneReady}
+      onRender={onRender}
+      id="my-canvas"
+    />
   </div>
 );
