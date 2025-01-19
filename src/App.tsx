@@ -6,7 +6,6 @@ import {
   ArcRotateCamera,
 } from "@babylonjs/core";
 // import SceneComponent from 'babylonjs-hook'; // if you install 'babylonjs-hook' NPM.
-import "./App.css";
 import { SceneComponent } from "./SceneComponent";
 
 const onSceneReady = (scene: Scene) => {
@@ -53,6 +52,7 @@ const onSceneReady = (scene: Scene) => {
 
 export default () => (
   <div>
+    <h1 className="text-3xl font-bold underline">Hello world!</h1>
     <SceneComponent
       antialias
       onSceneReady={onSceneReady}
