@@ -1,26 +1,28 @@
 import {
-  FreeCamera,
   Vector3,
   HemisphericLight,
   MeshBuilder,
   Scene,
+  ArcRotateCamera,
 } from "@babylonjs/core";
 // import SceneComponent from 'babylonjs-hook'; // if you install 'babylonjs-hook' NPM.
 import "./App.css";
 import { SceneComponent } from "./SceneComponent";
 
-let box: any;
-
 const onSceneReady = (scene: Scene) => {
-  // This creates and positions a free camera (non-mesh)
-  const camera = new FreeCamera("camera1", new Vector3(0, 5, -10), scene);
-
-  // This targets the camera to scene origin
-  camera.setTarget(Vector3.Zero());
+  // カメラを作成
+  const camera = new ArcRotateCamera(
+    "camera",
+    -Math.PI / 2,
+    Math.PI / 2.5,
+    3,
+    new Vector3(0, 5, -10),
+    scene,
+  );
 
   const canvas = scene.getEngine().getRenderingCanvas();
 
-  // This attaches the camera to the canvas
+  // ユーザからの入力でカメラをコントロールするため、カメラをキャンバスにアタッチ
   camera.attachControl(canvas, true);
 
   // This creates a light, aiming 0,1,0 - to the sky (non-mesh)
@@ -29,34 +31,32 @@ const onSceneReady = (scene: Scene) => {
   // Default intensity is 1. Let's dim the light a small amount
   light.intensity = 0.7;
 
-  // Our built-in 'box' shape.
-  box = MeshBuilder.CreateBox("box", { size: 2 }, scene);
-
-  // Move the box upward 1/2 its height
+  // 箱 (豆腐) を作成
+  const box = MeshBuilder.CreateBox("box", { size: 2 }, scene);
   box.position.y = 1;
 
   // Our built-in 'ground' shape.
-  MeshBuilder.CreateGround("ground", { width: 6, height: 6 }, scene);
+  // MeshBuilder.CreateGround("ground", { width: 6, height: 6 }, scene);
 };
 
 /**
  * Will run on every frame render.  We are spinning the box on y-axis.
  */
-const onRender = (scene: Scene) => {
-  if (box !== undefined) {
-    const deltaTimeInMillis = scene.getEngine().getDeltaTime();
-
-    const rpm = 10;
-    box.rotation.y += (rpm / 60) * Math.PI * 2 * (deltaTimeInMillis / 1000);
-  }
-};
+// const onRender = (scene: Scene) => {
+//   if (box !== undefined) {
+//     const deltaTimeInMillis = scene.getEngine().getDeltaTime();
+//
+//     const rpm = 10;
+//     box.rotation.y += (rpm / 60) * Math.PI * 2 * (deltaTimeInMillis / 1000);
+//   }
+// };
 
 export default () => (
   <div>
     <SceneComponent
       antialias
       onSceneReady={onSceneReady}
-      onRender={onRender}
+      // onRender={onRender}
       id="my-canvas"
     />
   </div>

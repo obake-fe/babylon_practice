@@ -7,7 +7,7 @@ type SceneComponentProps = {
   adaptToDeviceRatio?: boolean;
   sceneOptions?: SceneOptions;
   onSceneReady: (scene: Scene) => void;
-  onRender: (scene: Scene) => void;
+  onRender?: (scene: Scene) => void;
   id: string;
 };
 
@@ -16,9 +16,8 @@ export const SceneComponent = ({
   engineOptions,
   adaptToDeviceRatio,
   sceneOptions,
-  onRender,
+  // onRender,
   onSceneReady,
-  ...rest
 }: SceneComponentProps) => {
   const reactCanvas = useRef(null);
 
@@ -42,7 +41,7 @@ export const SceneComponent = ({
     }
 
     engine.runRenderLoop(() => {
-      if (typeof onRender === "function") onRender(scene);
+      // if (typeof onRender === "function") onRender(scene);
       scene.render();
     });
 
@@ -66,9 +65,9 @@ export const SceneComponent = ({
     engineOptions,
     adaptToDeviceRatio,
     sceneOptions,
-    onRender,
+    // onRender,
     onSceneReady,
   ]);
 
-  return <canvas ref={reactCanvas} {...rest} />;
+  return <canvas ref={reactCanvas} />;
 };
