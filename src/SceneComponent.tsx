@@ -1,10 +1,13 @@
 import { useEffect, useRef } from "react";
-import { Engine, Scene } from "@babylonjs/core";
+import { Engine, EngineOptions, Scene, SceneOptions } from "@babylonjs/core";
 
 type SceneComponentProps = {
   antialias: true;
-  onSceneReady: (scene: any) => void;
-  onRender: (scene: any) => void;
+  engineOptions?: EngineOptions;
+  adaptToDeviceRatio?: boolean;
+  sceneOptions?: SceneOptions;
+  onSceneReady: (scene: Scene) => void;
+  onRender: (scene: Scene) => void;
   id: string;
 };
 
