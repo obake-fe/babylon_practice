@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Engine, EngineOptions, Scene, SceneOptions } from "@babylonjs/core";
+import { Nav } from "./Nav.tsx";
 
 type SceneComponentProps = {
   antialias: true;
@@ -69,5 +70,10 @@ export const SceneComponent = ({
     onSceneReady,
   ]);
 
-  return <canvas className="w-full h-full" ref={reactCanvas} />;
+  return (
+    <>
+      <Nav />
+      <canvas className="w-full h-full" ref={reactCanvas} />;
+    </>
+  );
 };
