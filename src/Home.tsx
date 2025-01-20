@@ -6,11 +6,15 @@ export const Home = () => {
       <h1 className="text-3xl font-bold underline">Hello world!</h1>
       <nav>
         <ul>
-          <li>
-            <Link to="/">Home</Link>
+          <li className="navbar bg-base-100">
+            <Link to="/" className="btn btn-ghost text-xl">
+              Home
+            </Link>
           </li>
-          <li>
-            <Link to="/box">Box</Link>
+          <li className="navbar bg-base-100">
+            <Link to="/box" className="btn btn-ghost text-xl">
+              Box
+            </Link>
           </li>
         </ul>
       </nav>
