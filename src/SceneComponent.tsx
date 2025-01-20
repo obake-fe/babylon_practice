@@ -69,5 +69,5 @@ export const SceneComponent = ({
     onSceneReady,
   ]);
 
-  return <canvas ref={reactCanvas} />;
+  return <canvas className="w-full h-full" ref={reactCanvas} />;
 };

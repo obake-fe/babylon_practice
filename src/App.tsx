@@ -7,6 +7,8 @@ import {
 } from "@babylonjs/core";
 // import SceneComponent from 'babylonjs-hook'; // if you install 'babylonjs-hook' NPM.
 import { SceneComponent } from "./SceneComponent";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Home } from "./Home.tsx";
 
 const onSceneReady = (scene: Scene) => {
   // カメラを作成
@@ -15,7 +17,7 @@ const onSceneReady = (scene: Scene) => {
     -Math.PI / 2,
     Math.PI / 2.5,
     3,
-    new Vector3(0, 5, -10),
+    new Vector3(0, 0, 0),
     scene,
   );
 
@@ -31,8 +33,8 @@ const onSceneReady = (scene: Scene) => {
   light.intensity = 0.7;
 
   // 箱 (豆腐) を作成
-  const box = MeshBuilder.CreateBox("box", { size: 2 }, scene);
-  box.position.y = 1;
+  const box = MeshBuilder.CreateBox("box", {}, scene);
+  box.position.y = 0;
 
   // Our built-in 'ground' shape.
   // MeshBuilder.CreateGround("ground", { width: 6, height: 6 }, scene);
@@ -51,13 +53,22 @@ const onSceneReady = (scene: Scene) => {
 // };
 
 export default () => (
-  <div>
-    <h1 className="text-3xl font-bold underline">Hello world!</h1>
-    <SceneComponent
-      antialias
-      onSceneReady={onSceneReady}
-      // onRender={onRender}
-      id="my-canvas"
-    />
-  </div>
+  <Router>
+    <Routes>
+      {/* ホームページのルート */}
+      <Route path="/" element={<Home />} />
+
+      <Route
+        path="/box"
+        element={
+          <SceneComponent
+            antialias
+            onSceneReady={onSceneReady}
+            // onRender={onRender}
+            id="my-canvas"
+          />
+        }
+      />
+    </Routes>
+  </Router>
 );
