@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ArcRotateCamera,
   Engine,
@@ -13,8 +13,13 @@ import { Nav } from "../components/Nav.tsx";
 export const Village = () => {
   const reactCanvas = useRef(null);
   const antialias = true;
+  const [musicPlaying, setMusicPlaying] = useState(false); // 音楽の状態管理
+  const [music, setMusic] = useState<Sound | null>(null); // 音楽オブジェクト
+  const [audioContextResumed, setAudioContextResumed] = useState(false); // AudioContextの再開フラグ
+  // const [engine, setEngine] = useState<Engine | null>(null); // Babylon.jsのエンジン
+  // const [scene, setScene] = useState<Scene | null>(null); // Babylon.jsのシーン
 
-  const onSceneReady = async (scene: Scene) => {
+  const onSceneReady = useCallback(async (scene: Scene) => {
     // カメラを作成
     const camera = new ArcRotateCamera(
       "camera",
@@ -54,18 +59,19 @@ export const Village = () => {
     // 地面を作成
     MeshBuilder.CreateGround("ground", { width: 10, height: 10 }, scene);
 
-    const music = new Sound(
+    const bgm = new Sound(
       "backgroundMusic",
       "/public/morning.ogg",
       scene,
       null,
       {
         loop: true,
-        autoplay: true,
+        autoplay: false,
         volume: 0.5,
       },
     );
-  };
+    setMusic(bgm);
+  }, []);
 
   // set up basic engine and scene
   useEffect(() => {
@@ -73,21 +79,24 @@ export const Village = () => {
 
     if (!canvas) return;
 
-    const engine = new Engine(canvas, antialias);
-    const scene = new Scene(engine);
-    if (scene.isReady()) {
-      onSceneReady(scene);
+    const newEngine = new Engine(canvas, antialias);
+    const newScene = new Scene(newEngine);
+    // setEngine(newEngine);
+    // setScene(newScene);
+
+    if (newScene.isReady()) {
+      onSceneReady(newScene);
     } else {
-      scene.onReadyObservable.addOnce((scene) => onSceneReady(scene));
+      newScene.onReadyObservable.addOnce((scene) => onSceneReady(scene));
     }
 
     // シーンを継続的にレンダリングするためにレンダーループに登録する
-    engine.runRenderLoop(() => {
-      scene.render();
+    newEngine.runRenderLoop(() => {
+      newScene.render();
     });
 
     const resize = () => {
-      scene.getEngine().resize();
+      newScene.getEngine().resize();
     };
 
     if (window) {
@@ -95,17 +104,48 @@ export const Village = () => {
     }
 
     return () => {
-      scene.getEngine().dispose();
+      newScene.getEngine().dispose();
 
       if (window) {
         window.removeEventListener("resize", resize);
       }
     };
-  }, [antialias, onSceneReady]);
+  }, [onSceneReady]);
+
+  // ユーザーの操作後に音楽を再生する関数
+  const toggleMusic = () => {
+    // AudioContextを再開
+    if (!audioContextResumed) {
+      const audioContext = new (window.AudioContext ||
+        (window as any).webkitAudioContext)();
+      audioContext.resume().then(() => {
+        console.log("AudioContext resumed");
+        setAudioContextResumed(true);
+      });
+    }
+
+    if (musicPlaying) {
+      music!.stop(); // 音楽を停止
+    } else {
+      music!.play(); // 音楽を再生
+    }
+    setMusicPlaying(!musicPlaying); // 音楽の状態を切り替え
+  };
 
   return (
     <>
       <Nav />
+      <div className="w-28 form-control">
+        <label className="label cursor-pointer">
+          <span className="label-text">Music</span>
+          <input
+            type="checkbox"
+            className="toggle"
+            defaultChecked={false}
+            onClick={toggleMusic}
+          />
+        </label>
+      </div>
       <canvas className="w-full h-full" ref={reactCanvas} />
     </>
   );
