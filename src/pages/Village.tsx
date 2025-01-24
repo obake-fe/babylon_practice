@@ -15,7 +15,6 @@ export const Village = () => {
   const antialias = true;
   const [musicPlaying, setMusicPlaying] = useState(false); // 音楽の状態管理
   const [music, setMusic] = useState<Sound | null>(null); // 音楽オブジェクト
-  const [audioContextResumed, setAudioContextResumed] = useState(false); // AudioContextの再開フラグ
   // const [engine, setEngine] = useState<Engine | null>(null); // Babylon.jsのエンジン
   // const [scene, setScene] = useState<Scene | null>(null); // Babylon.jsのシーン
 
@@ -59,17 +58,11 @@ export const Village = () => {
     // 地面を作成
     MeshBuilder.CreateGround("ground", { width: 10, height: 10 }, scene);
 
-    const bgm = new Sound(
-      "backgroundMusic",
-      "/public/morning.ogg",
-      scene,
-      null,
-      {
-        loop: true,
-        autoplay: false,
-        volume: 0.5,
-      },
-    );
+    const bgm = new Sound("backgroundMusic", "/morning.ogg", scene, null, {
+      loop: true,
+      autoplay: false,
+      volume: 0.5,
+    });
     setMusic(bgm);
   }, []);
 
@@ -114,15 +107,8 @@ export const Village = () => {
 
   // ユーザーの操作後に音楽を再生する関数
   const toggleMusic = () => {
-    // AudioContextを再開
-    if (!audioContextResumed) {
-      const audioContext = new (window.AudioContext ||
-        (window as any).webkitAudioContext)();
-      audioContext.resume().then(() => {
-        console.log("AudioContext resumed");
-        setAudioContextResumed(true);
-      });
-    }
+    // babylon.js のデフォルトのミュート機能を解除
+    Engine.audioEngine!.unlock();
 
     if (musicPlaying) {
       music!.stop(); // 音楽を停止
