@@ -1,4 +1,4 @@
-import { Nav } from "./Nav.tsx";
+import { Nav } from "../components/Nav.tsx";
 
 export const Home = () => {
   return (
