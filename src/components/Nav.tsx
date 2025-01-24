@@ -15,6 +15,11 @@ export const Nav = () => {
               Box
             </Link>
           </li>
+          <li className="bg-base-100">
+            <Link to="/house" className="btn btn-ghost text-xl">
+              House
+            </Link>
+          </li>
         </ul>
       </nav>
     </div>
