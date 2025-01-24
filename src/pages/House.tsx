@@ -59,8 +59,8 @@ export const House = () => {
       scene.onReadyObservable.addOnce((scene) => onSceneReady(scene));
     }
 
+    // シーンを継続的にレンダリングするためにレンダーループに登録する
     engine.runRenderLoop(() => {
-      // if (typeof onRender === "function") onRender(scene);
       scene.render();
     });
 

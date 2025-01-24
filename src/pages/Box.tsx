@@ -11,19 +11,19 @@ import {
 } from "@babylonjs/core";
 import { Nav } from "../components/Nav.tsx";
 
-type SceneComponentProps = {
+type BoxProps = {
   engineOptions?: EngineOptions;
   adaptToDeviceRatio?: boolean;
   sceneOptions?: SceneOptions;
   onRender?: (scene: Scene) => void;
 };
 
-export const SceneComponent = ({
+export const Box = ({
   engineOptions,
   adaptToDeviceRatio,
   sceneOptions,
   // onRender,
-}: SceneComponentProps) => {
+}: BoxProps) => {
   const reactCanvas = useRef(null);
   const antialias = true;
 
