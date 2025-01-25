@@ -10,6 +10,7 @@ import {
   StandardMaterial,
   Texture,
   Vector3,
+  Vector4,
 } from "@babylonjs/core";
 import { Nav } from "../components/Nav.tsx";
 
@@ -20,6 +21,70 @@ export const Village = () => {
   const [music, setMusic] = useState<Sound | null>(null); // 音楽オブジェクト
   // const [engine, setEngine] = useState<Engine | null>(null); // Babylon.jsのエンジン
   // const [scene, setScene] = useState<Scene | null>(null); // Babylon.jsのシーン
+
+  /*
+   * 地面を作成
+   */
+  const buildGround = () => {
+    //color
+    const groundMat = new StandardMaterial("groundMat");
+    groundMat.diffuseColor = new Color3(0, 1, 0);
+
+    const ground = MeshBuilder.CreateGround("ground", {
+      width: 10,
+      height: 10,
+    });
+    ground.material = groundMat;
+  };
+
+  /*
+   * 箱を作成
+   */
+  const buildBox = () => {
+    // テクスチャ
+    const boxMat = new StandardMaterial("boxMat");
+    boxMat.diffuseTexture = new Texture(
+      "https://assets.babylonjs.com/environments/cubehouse.png",
+    );
+
+    // それぞれの面に違った画像をあてるためのオプションパラメータ
+    const faceUV = [];
+    faceUV[0] = new Vector4(0.5, 0.0, 0.75, 1.0); //rear face
+    faceUV[1] = new Vector4(0.0, 0.0, 0.25, 1.0); //front face
+    faceUV[2] = new Vector4(0.25, 0, 0.5, 1.0); //right side
+    faceUV[3] = new Vector4(0.75, 0, 1.0, 1.0); //left side
+    // top 4 and bottom 5 not seen so not set
+
+    /**** World Objects *****/
+    const box = MeshBuilder.CreateBox("box", { faceUV: faceUV, wrap: true });
+    box.material = boxMat;
+    box.position.y = 0.5;
+
+    // return box;
+  };
+
+  /*
+   * 屋根を作成
+   */
+  const buildRoof = () => {
+    // テクスチャ
+    const roofMat = new StandardMaterial("roofMat");
+    roofMat.diffuseTexture = new Texture(
+      "https://assets.babylonjs.com/environments/roof.jpg",
+    );
+
+    const roof = MeshBuilder.CreateCylinder("roof", {
+      diameter: 1.3,
+      height: 1.2,
+      tessellation: 3,
+    });
+    roof.material = roofMat;
+    roof.scaling.x = 0.75;
+    roof.rotation.z = Math.PI / 2;
+    roof.position.y = 1.22;
+
+    // return roof;
+  };
 
   const onSceneReady = useCallback(async (scene: Scene) => {
     /**** Set camera and light *****/
@@ -44,44 +109,9 @@ export const Village = () => {
     // Default intensity is 1. Let's dim the light a small amount
     light.intensity = 0.7;
 
-    /**** Materials *****/
-    //color
-    const groundMat = new StandardMaterial("groundMat");
-    groundMat.diffuseColor = new Color3(0, 1, 0);
-
-    //texture
-    const roofMat = new StandardMaterial("roofMat");
-    roofMat.diffuseTexture = new Texture(
-      "https://assets.babylonjs.com/environments/roof.jpg",
-    );
-    const boxMat = new StandardMaterial("boxMat");
-    boxMat.diffuseTexture = new Texture(
-      "https://www.babylonjs-playground.com/textures/floor.png",
-    );
-
-    /**** World Objects *****/
-    // 箱 (豆腐) を作成
-    const box = MeshBuilder.CreateBox("box", {});
-    box.material = boxMat;
-    box.position.y = 0.5;
-
-    const roof = MeshBuilder.CreateCylinder("roof", {
-      diameter: 1.3,
-      height: 1.2,
-      tessellation: 3,
-    });
-    roof.material = roofMat;
-    roof.scaling.x = 0.75;
-    roof.rotation.z = Math.PI / 2;
-    roof.position.y = 1.22;
-
-    // 地面を作成
-    const ground = MeshBuilder.CreateGround(
-      "ground",
-      { width: 10, height: 10 },
-      scene,
-    );
-    ground.material = groundMat;
+    buildGround();
+    buildBox();
+    buildRoof();
 
     const bgm = new Sound("backgroundMusic", "/morning.ogg", scene, null, {
       loop: true,
