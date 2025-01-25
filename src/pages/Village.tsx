@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ArcRotateCamera,
+  Color3,
   Engine,
   HemisphericLight,
   MeshBuilder,
   Scene,
   Sound,
+  StandardMaterial,
+  Texture,
   Vector3,
 } from "@babylonjs/core";
 import { Nav } from "../components/Nav.tsx";
@@ -19,6 +22,7 @@ export const Village = () => {
   // const [scene, setScene] = useState<Scene | null>(null); // Babylon.jsのシーン
 
   const onSceneReady = useCallback(async (scene: Scene) => {
+    /**** Set camera and light *****/
     // カメラを作成
     const camera = new ArcRotateCamera(
       "camera",
@@ -40,23 +44,44 @@ export const Village = () => {
     // Default intensity is 1. Let's dim the light a small amount
     light.intensity = 0.7;
 
-    // 箱 (豆腐) を作成
-    const box = MeshBuilder.CreateBox("box", {}, scene);
+    /**** Materials *****/
+    //color
+    const groundMat = new StandardMaterial("groundMat");
+    groundMat.diffuseColor = new Color3(0, 1, 0);
 
-    // 箱のデフォルトの高さは1
+    //texture
+    const roofMat = new StandardMaterial("roofMat");
+    roofMat.diffuseTexture = new Texture(
+      "https://assets.babylonjs.com/environments/roof.jpg",
+    );
+    const boxMat = new StandardMaterial("boxMat");
+    boxMat.diffuseTexture = new Texture(
+      "https://www.babylonjs-playground.com/textures/floor.png",
+    );
+
+    /**** World Objects *****/
+    // 箱 (豆腐) を作成
+    const box = MeshBuilder.CreateBox("box", {});
+    box.material = boxMat;
     box.position.y = 0.5;
 
-    // 家 を作成
-    // const scene1 = await SceneLoader.AppendAsync(
-    //   "https://assets.babylonjs.com/meshes/",
-    //   "both_houses_scene.babylon",
-    // );
-    // const house = scene1.getMeshByName("detached_house");
-    //
-    // house!.position.y = 0;
+    const roof = MeshBuilder.CreateCylinder("roof", {
+      diameter: 1.3,
+      height: 1.2,
+      tessellation: 3,
+    });
+    roof.material = roofMat;
+    roof.scaling.x = 0.75;
+    roof.rotation.z = Math.PI / 2;
+    roof.position.y = 1.22;
 
     // 地面を作成
-    MeshBuilder.CreateGround("ground", { width: 10, height: 10 }, scene);
+    const ground = MeshBuilder.CreateGround(
+      "ground",
+      { width: 10, height: 10 },
+      scene,
+    );
+    ground.material = groundMat;
 
     const bgm = new Sound("backgroundMusic", "/morning.ogg", scene, null, {
       loop: true,
