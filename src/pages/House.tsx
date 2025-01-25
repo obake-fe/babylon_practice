@@ -84,7 +84,7 @@ export const House = () => {
   return (
     <>
       <Nav />
-      <canvas className="w-full h-full" ref={reactCanvas} />
+      <canvas className="w-1/2 h-1/2" ref={reactCanvas} />
     </>
   );
 };
