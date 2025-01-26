@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Home } from "../pages/Home.tsx";
 import { House } from "../pages/House.tsx";
 import { Village } from "../pages/Village.tsx";
+import { Basketball } from "../pages/Basketball.tsx";
 
 export default () => (
   <Router>
@@ -13,6 +14,7 @@ export default () => (
       <Route path="/box" element={<Box />} />
       <Route path="/house" element={<House />} />
       <Route path="/village" element={<Village />} />
+      <Route path="/basketball" element={<Basketball />} />
     </Routes>
   </Router>
 );

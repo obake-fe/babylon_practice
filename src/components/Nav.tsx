@@ -25,6 +25,11 @@ export const Nav = () => {
               Village
             </Link>
           </li>
+          <li className="bg-base-100">
+            <Link to="/basketball" className="btn btn-ghost text-xl">
+              Basketball
+            </Link>
+          </li>
         </ul>
       </nav>
     </div>
